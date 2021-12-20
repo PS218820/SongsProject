@@ -39,6 +39,18 @@
       <form action="/songs">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Back to home</button>
       </form>
+      @isset($songsFromAPI)
+@foreach($songsFromAPI as $song)
+<form action="{{route('songs.store')}}" method="POST">
+@csrf
+<input type="text" name="title" value="{{$song['name']}}">
+<input type="text" name="singer" value="{{$song['artist']}}">
+<button type="submit" class="">+</button>
+</form>
+
+
+@endforeach
+@endisset
     </div>
   </div>
 </body>

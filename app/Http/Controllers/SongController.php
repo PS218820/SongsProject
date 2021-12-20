@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 use App\Models\Song;
 use App\Models\Album;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
 
 class SongController extends Controller
 {
@@ -26,10 +29,17 @@ class SongController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-
-
+      $songsFromAPI = [];
+      if($request->query->has('title')) {
+        $api_key = '29dcb49b23a545a313db734aea769cb0';
+        $title = $request->query('title');
+        $response = Http::get( 'http://ws.audioscrobbler.com/2.0/?method=track.search&track=' . $title . '&api_key=' . $api_key . '&format=json' )->json();
+        $songsFromAPI = $response["results"]["trackmatches"]["track"];
+        return view('Songs.create', ['songsFromAPI' => $songsFromAPI]);
+      }
+      return view('Songs.create');
     }
 
     /**
